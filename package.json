@@ -4,7 +4,6 @@
   "description": "Utility to create backpressure",
   "private": true,
   "author": "Valtteri Virtanen (valtteri.virtanen@gmail.com)",
-  "main": "main.ts",
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "format": "git ls-files \"*.ts\" \"*.js\" | xargs -n 100 prettier --write",
