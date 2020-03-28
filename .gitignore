@@ -1,0 +1,19 @@
+# General
+*.DS_Store
+
+#
+.env.development
+
+# Dependency directories
+node_modules/
+
+# Logs
+yarn-error.log
+telepresence.log
+
+test-report.xml
+coverage/
+
+*.generated.ts
+
+.idea
