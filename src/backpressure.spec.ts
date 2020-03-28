@@ -67,4 +67,30 @@ describe('backpressure', () => {
       return current;
     });
   });
+
+  it('shares the same inflight counter with different functions', async () => {
+    const backpressure = new Backpressure(1);
+
+    const firstFn = async () => {
+      await new Promise(resolve => setTimeout(resolve, SLEEP_TIME_MS));
+      return Date.now();
+    };
+    const backpressuredFirstFn = backpressure.wrap(firstFn);
+    const secondFn = async () => {
+      await new Promise(resolve => setTimeout(resolve, SLEEP_TIME_MS));
+      return Date.now();
+    };
+    const backpressuredSecondFn = backpressure.wrap(secondFn);
+    const functions = Array.from(Array(4)).map((_, i) => {
+      return i % 2 === 0 ? backpressuredFirstFn : backpressuredSecondFn;
+    });
+
+    const results = await Promise.all(functions.map(fn => fn()));
+    results.reduce((previous, current) => {
+      if (previous !== undefined) {
+        expect(current - previous).toBeGreaterThanOrEqual(SLEEP_TIME_MS);
+      }
+      return current;
+    });
+  });
 });
