@@ -11,8 +11,8 @@
     "lint:fix": "eslint --fix . --ext .ts",
     "lint:eslint": "eslint . --ext .ts",
     "jest": "jest --forceExit",
-    "test": "yarn run jest test --coverage",
-    "test:watch": "jest --watch test"
+    "test": "yarn run jest --coverage",
+    "test:watch": "jest --watch"
   },
   "dependencies": {},
   "devDependencies": {
@@ -33,8 +33,6 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "setupFilesAfterEnv": [],
-    "testRegex": ".*\\.spec.(js|ts)$",
     "testResultsProcessor": "./node_modules/jest-junit-reporter",
     "moduleFileExtensions": [
       "js",
@@ -44,7 +42,6 @@
       "tsx"
     ],
     "preset": "ts-jest",
-    "testMatch": null,
     "globals": {
       "ts-jest": {
         "diagnostics": false
