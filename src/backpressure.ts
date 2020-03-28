@@ -13,16 +13,17 @@ export class Backpressure {
   public wrap<T>(fn: BackpressuredFunction<T>): BackpressuredFunction<T> {
     const backpressuredFunction = async (...args: any[]): Promise<T> => {
       if (this.isInvocationAllowed()) {
-        this.inflightCalls++;
-        const returnValue = await fn(...args);
-        this.inflightCalls--;
+        try {
+          this.inflightCalls++;
+          const returnValue = await fn(...args);
 
-        const waitingLeash = this.leashes.shift();
-        if (waitingLeash) {
-          waitingLeash.release();
+          return returnValue;
+        } catch (error) {
+          throw error;
+        } finally {
+          this.inflightCalls--;
+          this.releaseNextLeash();
         }
-
-        return returnValue;
       } else {
         const leash = getLeash();
         this.leashes.push(leash);
@@ -37,5 +38,12 @@ export class Backpressure {
 
   private isInvocationAllowed(): boolean {
     return this.inflightCalls < this.maxCalls;
+  }
+
+  private releaseNextLeash() {
+    const waitingLeash = this.leashes.shift();
+    if (waitingLeash) {
+      waitingLeash.release();
+    }
   }
 }
