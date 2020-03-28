@@ -1,10 +1,10 @@
-import { defer, DeferredFunction } from './util';
+import { getLeash, Leash } from './util';
 
 type BackpressuredFunction<T> = (...args: any[]) => Promise<T>;
 
 export class Backpressure {
   private inflightCalls = 0;
-  private deferredCalls: DeferredFunction<any>[] = [];
+  private leashes: Leash[] = [];
 
   constructor(private maxCalls: number = 2) {}
   /**
@@ -17,16 +17,16 @@ export class Backpressure {
         const returnValue = await fn(...args);
         this.inflightCalls--;
 
-        const pendingCall = this.deferredCalls.shift();
-        if (pendingCall) {
-          pendingCall.resolve();
+        const waitingLeash = this.leashes.shift();
+        if (waitingLeash) {
+          waitingLeash.release();
         }
 
         return returnValue;
       } else {
-        const deferred = defer<void>();
-        this.deferredCalls.push(deferred);
-        await deferred.promise;
+        const leash = getLeash();
+        this.leashes.push(leash);
+        await leash.promise;
 
         return backpressuredFunction(...args);
       }
