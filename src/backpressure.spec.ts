@@ -5,25 +5,24 @@ const SLEEP_TIME_MS = 100;
 describe('backpressure', () => {
   it('only allows N concurrect calls of a function', async () => {
     const backpressure = new Backpressure(2);
-    const sleeper = async (callback: Function) => {
+    const sleeper = async () => {
       await new Promise(resolve => setTimeout(resolve, SLEEP_TIME_MS));
-      callback(Date.now());
+      return Date.now();
     };
     const backpressuredSleeper = backpressure.wrap(sleeper);
 
-    const doneTrackers = Array.from(Array(3)).map(() => jest.fn());
-    const calls = doneTrackers.map(isDone => {
-      return backpressuredSleeper(isDone);
+    const calls = Array.from(Array(3)).map(() => {
+      return backpressuredSleeper();
     });
 
-    await Promise.all(calls);
+    const results = await Promise.all(calls);
 
-    const doneTimestamps = doneTrackers
-      .map(jestFn => {
-        return jestFn.mock.calls[0][0];
-      })
-      .sort();
-    expect(doneTimestamps[2] - doneTimestamps[1]).toBeGreaterThan(SLEEP_TIME_MS);
+    results.reduce((previousResult, result, index) => {
+      if (index === 2) {
+        expect(result - previousResult).toBeGreaterThan(SLEEP_TIME_MS);
+      }
+      return result;
+    }, 0);
   });
 
   it('allows functions to fail', async () => {
