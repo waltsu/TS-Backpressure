@@ -15,11 +15,7 @@ export class Backpressure {
       if (this.isInvocationAllowed()) {
         try {
           this.inflightCalls++;
-          const returnValue = await fn(...args);
-
-          return returnValue;
-        } catch (error) {
-          throw error;
+          return await fn(...args);
         } finally {
           this.inflightCalls--;
           this.releaseNextLeash();
