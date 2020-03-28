@@ -15,12 +15,11 @@
     "typeRoots": ["./src/types", "./node_modules/@types"],
     "baseUrl": "./src/types",
     "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "outDir": "dist"
   },
   "exclude": [],
   "include": [
-    "*.ts",
     "src/**/*.ts"
   ]
 }

@@ -17,3 +17,5 @@ coverage/
 *.generated.ts
 
 .idea
+
+dist/
