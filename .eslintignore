@@ -1,0 +1,5 @@
+node_modules
+coverage
+.git
+bin
+load_tests
