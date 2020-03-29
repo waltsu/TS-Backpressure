@@ -43,7 +43,7 @@ const heavyCalculation = async (ctx: Koa.Context, _next: Koa.Next) => {
 };
 
 const app = new Koa();
-app.use(backpressure({ maxCalls: 200 }));
+app.use(backpressure({ maxCalls: 2 }));
 app.use(heavyCalculation);
 
 const server = app.listen(4000);
