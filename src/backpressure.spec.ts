@@ -11,9 +11,7 @@ describe('backpressure', () => {
     };
     const backpressuredSleeper = backpressure.wrap(sleeper);
 
-    const calls = Array.from(Array(3)).map(() => {
-      return backpressuredSleeper();
-    });
+    const calls = Array.from(Array(3)).map(backpressuredSleeper);
 
     const results = await Promise.all(calls);
 
@@ -91,6 +89,25 @@ describe('backpressure', () => {
         expect(current - previous).toBeGreaterThanOrEqual(SLEEP_TIME_MS);
       }
       return current;
+    });
+  });
+
+  it('uses fifo strategy when deciding which function to invoke', async () => {
+    const backpressure = new Backpressure(1);
+
+    const sleeper = async () => {
+      await new Promise(resolve => setTimeout(resolve, SLEEP_TIME_MS));
+      return Date.now();
+    };
+    const backpressuredSleeper = backpressure.wrap(sleeper);
+
+    const start = Date.now();
+    const finishedTimes = await Promise.all(Array.from(Array(3)).map(backpressuredSleeper));
+
+    finishedTimes.forEach((finishedTime, index) => {
+      const elapsedTime = finishedTime - start;
+      const nextCallSlot = (index + 2) * SLEEP_TIME_MS;
+      expect(elapsedTime).toBeLessThanOrEqual(nextCallSlot);
     });
   });
 });
