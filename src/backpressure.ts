@@ -21,10 +21,7 @@ export class Backpressure {
           this.releaseNextLeash();
         }
       } else {
-        const leash = getLeash();
-        this.leashes.push(leash);
-        await leash.promise;
-
+        await this.wait();
         return backpressuredFunction(...args);
       }
     };
@@ -34,6 +31,12 @@ export class Backpressure {
 
   private isInvocationAllowed(): boolean {
     return this.inflightCalls < this.maxCalls;
+  }
+
+  private wait(): Promise<void> {
+    const leash = getLeash();
+    this.leashes.push(leash);
+    return leash.promise;
   }
 
   private releaseNextLeash() {
