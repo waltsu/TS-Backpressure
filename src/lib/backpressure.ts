@@ -2,6 +2,10 @@ import { getLeash, Leash } from '../util';
 
 type BackpressuredFunction<T> = (...args: any[]) => Promise<T>;
 
+type BackpressureStats = {
+  inflightCalls: number;
+  pendingCalls: number;
+};
 export class Backpressure {
   private inflightCalls = 0;
   private leashes: Leash[] = [];
@@ -27,6 +31,13 @@ export class Backpressure {
     };
 
     return backpressuredFunction as any;
+  }
+
+  public getStats(): BackpressureStats {
+    return {
+      inflightCalls: this.inflightCalls,
+      pendingCalls: this.leashes.length
+    };
   }
 
   private isInvocationAllowed(): boolean {
