@@ -1,7 +1,7 @@
 import * as Koa from 'koa';
 import { AddressInfo } from 'net';
 
-import { backpressure } from '../middleware/koa-middleware';
+import { init as initMiddleware } from '../middleware/koa-middleware';
 
 import * as debug from 'debug';
 const log = debug('ts-backpressure');
@@ -43,7 +43,10 @@ const heavyCalculation = async (ctx: Koa.Context, _next: Koa.Next) => {
 };
 
 const app = new Koa();
-app.use(backpressure({ maxCalls: 2 }));
+
+const { middleware } = initMiddleware({ maxCalls: 2 });
+app.use(middleware);
+
 app.use(heavyCalculation);
 
 const server = app.listen(4000);

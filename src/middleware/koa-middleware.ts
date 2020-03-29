@@ -5,12 +5,15 @@ export type BackpressureOptions = {
   maxCalls?: number;
 };
 
-export function backpressure(opts: BackpressureOptions) {
+export function init(opts: BackpressureOptions) {
   const backpressure = new Backpressure(fillDefaults(opts).maxCalls);
   const handler = async function (_ctx: Context, next: Next) {
     await next();
   };
-  return backpressure.wrap(handler);
+  return {
+    middleware: backpressure.wrap(handler),
+    backpressure: backpressure
+  };
 }
 
 function fillDefaults(opts: BackpressureOptions) {
