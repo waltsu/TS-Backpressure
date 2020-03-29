@@ -9,7 +9,7 @@
     "format": "git ls-files \"*.ts\" \"*.js\" | xargs -n 100 prettier --write",
     "lint:fix": "eslint --fix . --ext .ts",
     "lint:eslint": "eslint . --ext .ts",
-    "jest": "jest --forceExit",
+    "jest": "jest",
     "test": "yarn run jest --coverage",
     "test:watch": "jest --watch"
   },
