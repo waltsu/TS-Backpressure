@@ -44,7 +44,7 @@ const heavyCalculation = async (ctx: Koa.Context, _next: Koa.Next) => {
 
 const app = new Koa();
 
-const { middleware } = initMiddleware({ maxCalls: 2 });
+const { backpressure, middleware } = initMiddleware({ maxCalls: 2 });
 app.use(middleware);
 
 app.use(heavyCalculation);
@@ -52,3 +52,7 @@ app.use(heavyCalculation);
 const server = app.listen(4000);
 const address = server.address() as AddressInfo;
 log(`Server started at: ${address.address}:${address.port}`);
+
+process.on('SIGUSR2', () => {
+  log(backpressure.getStats());
+});
