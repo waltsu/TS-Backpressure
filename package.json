@@ -10,6 +10,10 @@
     "type": "git",
     "url": "https://github.com/waltsu/ts-backpressure.git"
   },
+  "keywords": [
+    "backpressure",
+    "typescript"
+  ],
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "format": "git ls-files \"*.ts\" \"*.js\" | xargs -n 100 prettier --write",
