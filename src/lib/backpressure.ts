@@ -1,4 +1,4 @@
-import { getLeash, Leash } from './util';
+import { getLeash, Leash } from '../util';
 
 type BackpressuredFunction<T> = (...args: any[]) => Promise<T>;
 

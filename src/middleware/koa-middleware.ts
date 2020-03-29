@@ -1,5 +1,5 @@
 import { Context, Next } from 'koa';
-import { Backpressure } from './backpressure';
+import { Backpressure } from '../lib/backpressure';
 
 export type BackpressureOptions = {
   maxCalls?: number;
