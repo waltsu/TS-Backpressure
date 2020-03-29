@@ -6,23 +6,29 @@ import { backpressure } from '../middleware/koa-middleware';
 import * as debug from 'debug';
 const log = debug('ts-backpressure');
 
-const LOOP_COUNT = 1000 * 1000 * 10;
+const LOOP_COUNT = 100;
 
-const spendCPUCycles = () => {
-  let result = 0;
-  let firstLoop = LOOP_COUNT;
-  let secondLoop = LOOP_COUNT;
-  let thirdLoop = LOOP_COUNT;
-
-  while (firstLoop >= 0) {
-    while (secondLoop >= 0) {
-      while (thirdLoop >= 0) {
+const calculateRandom = (): Promise<number> => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      let result = 0;
+      let loop = LOOP_COUNT * 1000 * 2;
+      while (loop >= 0) {
         result = Math.random() * Math.random();
-        thirdLoop--;
+        loop--;
       }
-      secondLoop--;
-    }
-    firstLoop--;
+      resolve(result);
+    }, 0);
+  });
+};
+
+const spendCPUCycles = async () => {
+  let result = 0;
+  let loop = LOOP_COUNT;
+
+  while (loop >= 0) {
+    result = await calculateRandom();
+    loop--;
   }
 
   return result;
@@ -30,14 +36,14 @@ const spendCPUCycles = () => {
 
 const heavyCalculation = async (ctx: Koa.Context, _next: Koa.Next) => {
   log('Starting to spend cycles');
-  const result = spendCPUCycles();
+  const result = await spendCPUCycles();
   log('Finished doing that');
 
   ctx.body = result;
 };
 
 const app = new Koa();
-app.use(backpressure({ maxCalls: 1 }));
+app.use(backpressure({ maxCalls: 200 }));
 app.use(heavyCalculation);
 
 const server = app.listen(4000);
