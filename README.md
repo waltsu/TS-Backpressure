@@ -4,7 +4,7 @@ Library for applying backpressure to the function invocations.
 
 ## Usage
 
-```
+```typescript
 import { Backpressure } from './backpressure';
 
 const sleep = async () => {
