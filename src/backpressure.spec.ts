@@ -1,6 +1,7 @@
 import { Backpressure } from './backpressure';
 
 const SLEEP_TIME_MS = 100;
+const SLEEP_TIME_WITH_ERROR_MARGINAL = SLEEP_TIME_MS - 10;
 
 describe('backpressure', () => {
   it('only allows N concurrect calls of a function', async () => {
@@ -17,7 +18,7 @@ describe('backpressure', () => {
 
     results.reduce((previousResult, result, index) => {
       if (index === 2) {
-        expect(result - previousResult).toBeGreaterThanOrEqual(SLEEP_TIME_MS);
+        expect(result - previousResult).toBeGreaterThanOrEqual(SLEEP_TIME_WITH_ERROR_MARGINAL);
       }
       return result;
     }, 0);
@@ -60,7 +61,7 @@ describe('backpressure', () => {
     const results = await Promise.all(calls);
     results.reduce((previous, current) => {
       if (previous !== undefined) {
-        expect(current - previous).toBeGreaterThanOrEqual(SLEEP_TIME_MS);
+        expect(current - previous).toBeGreaterThanOrEqual(SLEEP_TIME_WITH_ERROR_MARGINAL);
       }
       return current;
     });
@@ -86,7 +87,7 @@ describe('backpressure', () => {
     const results = await Promise.all(functions.map(fn => fn()));
     results.reduce((previous, current) => {
       if (previous !== undefined) {
-        expect(current - previous).toBeGreaterThanOrEqual(SLEEP_TIME_MS);
+        expect(current - previous).toBeGreaterThanOrEqual(SLEEP_TIME_WITH_ERROR_MARGINAL);
       }
       return current;
     });
