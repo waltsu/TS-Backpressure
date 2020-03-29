@@ -1,9 +1,11 @@
 {
-  "name": "Backpressure",
-  "version": "0.0.1",
-  "description": "Utility to create backpressure",
-  "private": true,
+  "name": "ts-backpressure",
+  "version": "0.1.0",
+  "license": "MIT",
+  "description": "Utility class to apply backpressure to the function invocations",
   "author": "Valtteri Virtanen (valtteri.virtanen@gmail.com)",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "format": "git ls-files \"*.ts\" \"*.js\" | xargs -n 100 prettier --write",
