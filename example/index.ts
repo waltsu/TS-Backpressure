@@ -1,7 +1,7 @@
 import * as Koa from 'koa';
 import { AddressInfo } from 'net';
 
-import { init as initMiddleware } from '../middleware/koa-middleware';
+import { init as initMiddleware } from '../src/middleware/koa-middleware';
 
 import * as debug from 'debug';
 const log = debug('ts-backpressure');
