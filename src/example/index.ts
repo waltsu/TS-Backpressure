@@ -5,6 +5,7 @@ import { init as initMiddleware } from '../middleware/koa-middleware';
 
 import * as debug from 'debug';
 const log = debug('ts-backpressure');
+const statsLog = debug('ts-backpressure:stats');
 
 const LOOP_COUNT = 100;
 
@@ -54,5 +55,7 @@ const address = server.address() as AddressInfo;
 log(`Server started at: ${address.address}:${address.port}`);
 
 process.on('SIGUSR2', () => {
-  log(backpressure.getStats());
+  setInterval(() => {
+    statsLog(backpressure.getStats());
+  }, 1000);
 });
