@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Server } from 'http';
 import { AddressInfo } from 'net';
 
+import { backpressure } from './koa-middleware';
+
 const SLEEP_TIME_MS = 100;
 const sleepEndpoint = async (ctx: Koa.Context, _next: Koa.Next) => {
   await new Promise(resolve => setTimeout(resolve, SLEEP_TIME_MS));
@@ -11,6 +13,7 @@ const sleepEndpoint = async (ctx: Koa.Context, _next: Koa.Next) => {
 
 const createTestApp = () => {
   const app = new Koa();
+  app.use(backpressure({ maxCalls: 1 }));
   app.use(sleepEndpoint);
 
   const server = app.listen(0);
